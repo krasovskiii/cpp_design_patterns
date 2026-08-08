@@ -1,17 +1,22 @@
 # Structural Patterns
 
+> **学习引导**：返回主目录：[README](../README.md) · 查看学习路线：[金融工程视角四梯队](../README.md#金融工程视角设计模式学习优先级排序)
+> **优先级标记**：`[T1]`~`[T4]` 表示在金融工程视角下的学习优先级梯队。
+
 ## Overview
 
-- [Adapter](#adapter): Adapts an interface X to conform with interface Y.
-- [Bridge](#bridge): Connects components while decoupling their interfaces from the implementation.
-- [Composite](#composite): Treats individual components and aggregate objects uniformly.
-- [Decorator](#decorator): Extends functionality without modifying internal code.
-- [Façade](#façade): Provides simple API to large codebase.
-- [Flyweight](#flyweight): Optimizes memory usage by storing data externally for similar objects.
-- [Proxy](#proxy): Provides an extra interface to a resource, adding functionallity in between.
+| 模式 | 优先级 | 一句话 |
+|------|:---:|--------|
+| [Decorator](#decorator--t1) | `[T1]` | 不修改原类即可叠加行为（期权障碍/亚式特征、止损止盈） |
+| [Adapter](#adapter--t2) | `[T2]` | 让现有接口适配所需接口（封装外部行情/数据源） |
+| [Bridge](#bridge--t3) | `[T3]` | 解耦接口与实现（金融工具与定价引擎解耦） |
+| [Composite](#composite--t3) | `[T3]` | 单个对象与组合对象统一处理（投资组合树） |
+| [Proxy](#proxy--t3) | `[T3]` | 为资源增加间接层（惰性加载、远程代理、权限控制） |
+| [Façade](#façade--t4) | `[T4]` | 为复杂系统提供简单入口（定价库估值接口） |
+| [Flyweight](#flyweight--t4) | `[T4]` | 外部化共享数据节省内存（共享合约内在属性） |
 
 
-## Adapter
+## Adapter — `[T2]`
 
 **Getting the interface you want from the interface you have**
 
@@ -27,7 +32,7 @@ We cannot modify the whole API to support a specific interface, so we adapt an e
 **adapter caching**: Sometimes the conversion logic requires the execution of expensive methods to transform static data. If we expect this to be executed many times, we can implement a caché.
 
 
-## Bridge
+## Bridge — `[T3]`
 
 **Connecting components together through abstractions. It decouples the interface (hierarchy) from the implementation (hierarchy).**
 
@@ -41,7 +46,7 @@ Helps preventing a entity explosion on a *cartesian product*. Example: An object
 - [pimpl idiom](bridge/pimpl_idiom.cpp)
 - [pimpl library](bridge/pimpl_library.cpp)
 
-## Composite
+## Composite — `[T3]`
 
 **Treating individual components and aggregate objects uniformly.**
 
@@ -52,7 +57,7 @@ Lets us group objects to make compound objects. E.g., nodes and leaves in a tree
 We can make use of C++ *duck typing*, expecting `begin` and `end` expressions to identify a collection.
 
 
-## Decorator
+## Decorator — `[T1]`
 
 **Facilitates the addition of behaviors to individual objects.**
 
@@ -67,7 +72,7 @@ It allows us to extend the class functionality without having to modify the inte
 **Functional Decorator**: Applies extra features to functions.
 
 
-## Façade
+## Façade — `[T4]`
 
 **Provides a simple and easy to understand user interface over a large and sophisticated body of code.**
 
@@ -76,7 +81,7 @@ It allows us to extend the class functionality without having to modify the inte
 Typical systems are complex and are build on top of many subsystems we do not want to expose. We use façade to provide a limited and simpler API to the consumer. It may allow users to escalate to a more complex API if they need to.
 
 
-## Flyweight
+## Flyweight — `[T4]`
 
 **A space optimization technique that lets us use less memory by storing externally the data associated with similar objects.**
 
@@ -86,7 +91,7 @@ This pattern is already implemented as a boost library `boost::flyweight`.
 
 Example: Do not store name/lastname pairs for each person, just keep a table of names and references to it.
 
-## Proxy
+## Proxy — `[T3]`
 
 **Interface to a particular resource. That resource may be remote, expensive or may require extra functionality. Keeps the original interface, but functionality is modified.**
 

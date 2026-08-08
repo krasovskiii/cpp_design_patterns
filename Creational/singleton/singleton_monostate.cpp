@@ -1,21 +1,76 @@
+/*
+ * ===========================================================================
+ * 设计模式：Monostate（单态模式）
+ * ===========================================================================
+ *
+ * 【核心思想】
+ * Monostate 是单例模式的一种变体：不同于传统单例（限制只有一个实例），
+ * Monostate 允许多个实例，但所有实例共享相同的状态（静态成员变量）。
+ * 外表看起来像普通类，内部行为像单例。
+ *
+ * 【适用场景 —— 通用】
+ * - 希望保持普通类的 API（可构造、可拷贝），但共享底层状态
+ * - 需要透明地将状态在所有实例间共享
+ * - 希望对客户端隐藏"单例"的事实
+ *
+ * 【金融工程应用】
+ * - 交易日历共享：多个模块（策略、风控、结算）各自创建 Calendar 实例，
+ *   但共享同一份交易日列表静态数据，修改全局日历后所有实例自动同步
+ * - 全局市场状态：TradingSession 的多个"视图"共享同一份状态（是否开盘、当前时段），
+ *   允许不同模块持有各自的"句柄"但看到一致的状态
+ * - 费率表共享：CommissionTable 的所有实例共享同一份费率数据，
+ *   运营更新费率后所有模块自动使用新费率，无需逐一通知
+ *
+ * 【Monostate vs Singleton】
+ * - Singleton：只有一个实例 → 限制构造
+ * - Monostate：可以有多个实例 → 但状态是共享的
+ * - Monostate 的优势：API 更自然（可以 new、可以传值）
+ * - Monostate 的劣势：用户可能不知道状态是共享的，导致难以发现的 bug
+ *
+ * 【UML 关键参与者】
+ * - Monostate（单态类）：Printer —— 使用 static 成员共享状态
+ * - 所有 Printer 实例共享同一个 id 值
+ *
+ * 【本例要点】
+ * - Printer 的 id 是 static 成员，所有实例共享
+ * - 可以创建多个 Printer 实例（p1, p2）
+ * - p1.set_id(0) 会影响 p2.get_id() 的返回值
+ * - 这种 API 可能导致难以发现的错误 —— 用户可能不知道状态是共享的
+ */
 
+/*
+ * Printer: Monostate 实现
+ *
+ * 资源（id）通过 static 成员被所有实例共享。
+ * 不同的 Printer 实例访问的是同一个底层资源。
+ *
+ * 注意：static 字段不会被继承 —— 子类会有自己的 static 副本。
+ *
+ * 潜在问题：API 可能导致难以发现的错误。用户可能不知道
+ * 资源是共享的，修改一个实例的状态会影响所有实例。
+ */
 class Printer {
-  // resource is managed statically
-  // different instances have access to the same resource.
-  //
-  // This field will not be inherited.
+  // 静态成员 —— 所有 Printer 实例共享同一个 id
+  // 注意：此字段不会被继承，子类有自己的 static 副本
   static int id;
 
 public:
-  // API can lead to hard to find errors. The user might
-  // not know that the resource is shared.
+  /*
+   * API 可能导致难以发现的错误：
+   * 用户可能不知道资源是共享的，修改一个实例会影响所有实例。
+   * 例如：p1.set_id(5) 后，p2.get_id() 也返回 5。
+   */
   int get_id() const { return id; }
   void set_id(int value) { id = value; }
 };
 int Printer::id = 0;
 
 int main() {
-  Printer p1, p2;
-  p1.set_id(0);
-  p2.get_id();
+  Printer p1, p2;  // 创建两个 Printer 实例
+
+  p1.set_id(0);    // 通过 p1 设置 id → 由于 static，影响所有实例
+  p2.get_id();     // p2.get_id() 也返回 0
+
+  // 这种行为的隐蔽性可能导致 bug：
+  // 用户可能以为 p1 和 p2 有独立的状态，但实际上是共享的
 }

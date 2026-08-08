@@ -1,14 +1,19 @@
 # Creational Patterns
 
+> **学习引导**：返回主目录：[README](../README.md) · 查看学习路线：[金融工程视角四梯队](../README.md#金融工程视角设计模式学习优先级排序)
+> **优先级标记**：`[T1]`~`[T4]` 表示在金融工程视角下的学习优先级梯队。
+
 ## Overview
 
-- [Builder](#Builder): Provides an API for constructing an object step-by-step.
-- [Factory](#Factory): Contruct complex objects in a wholesale way.
-- [Prototype](#Prototype): Allows deep copy of prototype objects.
-- [Singleton](#Singleton): Forces the use of a single instance of an object.
+| 模式 | 优先级 | 一句话 |
+|------|:---:|--------|
+| [Factory](#factory--t1) | `[T1]` | 批量创建复杂对象（金融工具/定价模型工厂） |
+| [Singleton](#singleton--t1) | `[T1]` | 强制全局唯一实例（配置/连接池/交易日历） |
+| [Builder](#builder--t2) | `[T2]` | 分步构建复杂对象（结构化产品/订单参数） |
+| [Prototype](#prototype--t4) | `[T4]` | 通过复制原型对象来创建（合约模板/因子配置） |
 
 
-## Builder
+## Builder — `[T2]`
 
 **The builder provides an API for constructing an object step-by-step.**
 
@@ -31,7 +36,7 @@ Instead of building the object from scratch, the builder creates object oriented
 **Builder Facade**: This pattern help us to split a complex builder into several simpler builder classes, which can also be chained.
 
 
-## Factory
+## Factory — `[T1]`
 
 **A component responsible solely for the wholesale (not piecewise) creation of objects**
 
@@ -50,7 +55,7 @@ Object creation logic is too complex for a single constructor. We want to avoid 
 **Abstract Factory**: Hierarchy of factories that handle the creation of a hierarchy of objects.
 
 
-## Prototype
+## Prototype — `[T4]`
 
 **Allows replicating a complex object**
 
@@ -67,7 +72,7 @@ Object creation logic is too complex for a single constructor. We want to avoid 
 - We get serialization and prototype functionality at once.
 - This way, it is imposible to mess up the copy constructors!.
 
-## Singleton
+## Singleton — `[T1]`
 
 > When discussing which patterns to drop, we found that we
 > still love them all. (Not really. I'm in favor of dropping
